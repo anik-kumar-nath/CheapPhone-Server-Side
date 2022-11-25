@@ -18,13 +18,21 @@ const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology:
 
 async function run() {
     try {
-        const userCollection = client.db('PracticeMongodbCrud').collection('users');
-        app.get('/users', async (req, res) => {
-            const query = {};
-            const cursor = userCollection.find(query);
-            const users = await cursor.toArray();
-            res.send(users);
+        const userCollection = client.db('CheapPhone').collection('Users');
+        // app.get('/users', async (req, res) => {
+        //     const query = {};
+        //     const cursor = userCollection.find(query);
+        //     const users = await cursor.toArray();
+        //     res.send(users);
+        // })
+        app.post('/newuser', async (req, res) => {
+            const newUser = req.body.userInformation;
+            const result = await userCollection.insertOne(newUser);
+            res.send(result);
         })
+
+
+
     } catch (error) {
         console.log(error)
     }
