@@ -1,7 +1,7 @@
 const express = require('express');
 const cors = require('cors');
 require('dotenv').config();
-const { MongoClient, ServerApiVersion } = require('mongodb');
+const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
 const port = process.env.PORT || 5000;
 const app = express();
 
@@ -19,15 +19,17 @@ const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology:
 async function run() {
     try {
         const userCollection = client.db('CheapPhone').collection('Users');
-        // app.get('/users', async (req, res) => {
-        //     const query = {};
-        //     const cursor = userCollection.find(query);
-        //     const users = await cursor.toArray();
-        //     res.send(users);
-        // })
+        const productCollection = client.db('CheapPhone').collection('products');
+
         app.post('/newuser', async (req, res) => {
             const newUser = req.body.userInformation;
             const result = await userCollection.insertOne(newUser);
+            res.send(result);
+        })
+        app.post('/addproduct', async (req, res) => {
+            let product = req.body;
+            const addingDate = new Date()
+            const result = await productCollection.insertOne({ ...product, ...{ addingDate } });
             res.send(result);
         })
 
