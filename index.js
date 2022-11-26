@@ -32,6 +32,17 @@ async function run() {
             const result = await userCollection.findOne(query);
             res.send(result)
         })
+        app.get('/allproducts', async (req, res) => {
+            const query = {};
+            const result = await productCollection.find(query).toArray();
+            res.send(result);
+        })
+        app.get('/myproducts', async (req, res) => {
+            const email = req.query.email;
+            const query = { sellerEmail: email };
+            const result = await productCollection.find(query).toArray();
+            res.send(result);
+        })
 
         app.post('/newuser', async (req, res) => {
             const newUser = req.body.userInformation;
