@@ -20,6 +20,7 @@ async function run() {
     try {
         const userCollection = client.db('CheapPhone').collection('Users');
         const productCollection = client.db('CheapPhone').collection('products');
+        const orderCollection = client.db('CheapPhone').collection('order');
         // app.get('/users', async (req, res) => {
         //     const query = {};
         //     const cursor = userCollection.find(query);
@@ -27,6 +28,12 @@ async function run() {
         //     res.send(users);
         // })
         app.get('/userrole', async (req, res) => {
+            const email = req.query.email;
+            const query = { email: email };
+            const result = await userCollection.findOne(query);
+            res.send(result)
+        })
+        app.get('/sellerstatus', async (req, res) => {
             const email = req.query.email;
             const query = { email: email };
             const result = await userCollection.findOne(query);
@@ -67,6 +74,15 @@ async function run() {
             res.send(result);
         })
 
+        app.post('/bookings', async (req, res) => {
+            const newBooked = req.body;
+            const result = await orderCollection.insertOne(newBooked);
+            res.send(result);
+        })
+        app.get('/bookings', async (req, res) => {
+            const result = await orderCollection.find({}).toArray();
+            res.send(result);
+        })
 
 
     } catch (error) {
