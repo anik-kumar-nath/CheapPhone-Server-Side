@@ -83,6 +83,22 @@ async function run() {
             const result = await orderCollection.find({}).toArray();
             res.send(result);
         })
+        app.get('/myorder', async (req, res) => {
+            const email = req.query.email;
+            const query = { buyerEmail: email };
+            const result = await orderCollection.find(query).toArray();
+            res.send(result);
+        })
+        app.get('/allseller', async (req, res) => {
+            const query = { role: 'Seller' };
+            const result = await userCollection.find(query).toArray();
+            res.send(result);
+        })
+        app.get('/allbuyer', async (req, res) => {
+            const query = { role: 'Buyer' };
+            const result = await userCollection.find(query).toArray();
+            res.send(result);
+        })
 
 
     } catch (error) {
