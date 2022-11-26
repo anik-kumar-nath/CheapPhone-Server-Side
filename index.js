@@ -20,6 +20,18 @@ async function run() {
     try {
         const userCollection = client.db('CheapPhone').collection('Users');
         const productCollection = client.db('CheapPhone').collection('products');
+        // app.get('/users', async (req, res) => {
+        //     const query = {};
+        //     const cursor = userCollection.find(query);
+        //     const users = await cursor.toArray();
+        //     res.send(users);
+        // })
+        app.get('/userrole', async (req, res) => {
+            const email = req.query.email;
+            const query = { email: email };
+            const result = await userCollection.findOne(query);
+            res.send(result)
+        })
 
         app.post('/newuser', async (req, res) => {
             const newUser = req.body.userInformation;
