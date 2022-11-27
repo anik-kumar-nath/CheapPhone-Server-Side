@@ -134,8 +134,15 @@ async function run() {
             const result = await reportCollection.find(query).toArray();
             res.send(result);
         })
-
-
+        app.delete('/report/:ProductId', async (req, res) => {
+            const id = req.params.ProductId;
+            const query = { _id: ObjectId(id) }
+            const query1 = { productId: id }
+            const result = await productCollection.deleteOne(query);
+            const result1 = await reportCollection.deleteMany(query1);
+            if (result1.deletedCount > 0)
+                res.send(result);
+        })
 
     } catch (error) {
         console.log(error)
