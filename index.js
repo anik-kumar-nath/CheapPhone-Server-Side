@@ -22,6 +22,7 @@ async function run() {
         const productCollection = client.db('CheapPhone').collection('products');
         const orderCollection = client.db('CheapPhone').collection('order');
         const reportCollection = client.db('CheapPhone').collection('reports');
+        const phoneCategory = client.db('CheapPhone').collection('PhoneCategory');
 
         app.get('/userrole', async (req, res) => {
             const email = req.query.email;
@@ -142,6 +143,17 @@ async function run() {
             const result1 = await reportCollection.deleteMany(query1);
             if (result1.deletedCount > 0)
                 res.send(result);
+        })
+        app.get('/phonecategory', async (req, res) => {
+            const query = {};
+            const result = await phoneCategory.find(query).toArray();
+            res.send(result);
+        })
+        app.get('/category/:id', async (req, res) => {
+            const id = req.params.id;
+            const query = { categoryId: id };
+            const result = await phoneCategory.findOne(query);
+            res.send(result);
         })
 
     } catch (error) {
