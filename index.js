@@ -21,12 +21,8 @@ async function run() {
         const userCollection = client.db('CheapPhone').collection('Users');
         const productCollection = client.db('CheapPhone').collection('products');
         const orderCollection = client.db('CheapPhone').collection('order');
-        // app.get('/users', async (req, res) => {
-        //     const query = {};
-        //     const cursor = userCollection.find(query);
-        //     const users = await cursor.toArray();
-        //     res.send(users);
-        // })
+        const reportCollection = client.db('CheapPhone').collection('reports');
+
         app.get('/userrole', async (req, res) => {
             const email = req.query.email;
             const query = { email: email };
@@ -79,6 +75,11 @@ async function run() {
             const result = await orderCollection.insertOne(newBooked);
             res.send(result);
         })
+        app.post('/addreport', async (req, res) => {
+            const report = req.body;
+            const result = await reportCollection.insertOne(report);
+            res.send(result);
+        })
         app.get('/bookings', async (req, res) => {
             const result = await orderCollection.find({}).toArray();
             res.send(result);
@@ -89,6 +90,7 @@ async function run() {
             const result = await orderCollection.find(query).toArray();
             res.send(result);
         })
+
         app.get('/allseller', async (req, res) => {
             const query = { role: 'Seller' };
             const result = await userCollection.find(query).toArray();
@@ -127,7 +129,11 @@ async function run() {
             res.send(result)
         })
 
-
+        app.get('/report', async (req, res) => {
+            const query = {};
+            const result = await reportCollection.find(query).toArray();
+            res.send(result);
+        })
 
 
 
