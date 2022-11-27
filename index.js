@@ -112,6 +112,25 @@ async function run() {
             res.send(result);
         })
 
+
+        app.put('/seller/:id', async (req, res) => {
+            const id = req.params.id;
+            const query = { _id: ObjectId(id) }
+            const updatedSeller = req.body;
+            const option = { upsert: true };
+            const updatedSellerOperation = {
+                $set: {
+                    status: updatedSeller.verificationText,
+                }
+            }
+            const result = await userCollection.updateOne(query, updatedSellerOperation, option)
+            res.send(result)
+        })
+
+
+
+
+
     } catch (error) {
         console.log(error)
     }
