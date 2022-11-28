@@ -29,7 +29,7 @@ async function run() {
         const brandCollection = client.db('CheapPhone').collection('Brands');
         const blogCollection = client.db('CheapPhone').collection('Blogs');
         const AdvertiseCollection = client.db('CheapPhone').collection('Advertise');
-        // const paymentsCollection=client.db('CheapPhone').collection('Payments');
+        const paymentsCollection = client.db('CheapPhone').collection('Payments');
 
         app.get('/userrole', async (req, res) => {
             const email = req.query.email;
@@ -198,20 +198,6 @@ async function run() {
                 clientSecret: paymentIntent.client_secret,
             });
         });
-        // app.post('/payments', async (req, res) =>{
-        //     const payment = req.body;
-        //     const result = await paymentsCollection.insertOne(payment);
-        //     const id = payment.bookingId
-        //     const filter = {_id: ObjectId(id)}
-        //     const updatedDoc = {
-        //         $set: {
-        //             paid: true,
-        //             transactionId: payment.transactionId
-        //         }
-        //     }
-        //     const updatedResult = await bookingsCollection.updateOne(filter, updatedDoc)
-        //     res.send(result);
-        // })
         app.get('/booking/:id', async (req, res) => {
             const id = req.params.id;
             const query = { _id: ObjectId(id) }
@@ -219,7 +205,33 @@ async function run() {
             res.send(result);
         })
 
+        app.post('/payment', async (req, res) => {
+            const payment = req.body;
+            const result = await paymentsCollection.insertOne(payment);
 
+            const bookingId = payment.bookingId;
+            const filterOrder = { _id: ObjectId(bookingId) }
+            const updatedOrder = {
+                $set: {
+                    payStatus: true,
+                }
+            }
+            const updatedOrderResult = await orderCollection.updateOne(filterOrder, updatedOrder);
+
+            const productId = payment.productId;
+            const advertiseDeleteQuery = { productId: productId }
+            const deleteAdvertise = await AdvertiseCollection.deleteMany(advertiseDeleteQuery)
+
+            const filterProduct = { _id: ObjectId(productId) }
+            const updatedProduct = {
+                $set: {
+                    productStatus: 'Sold',
+                }
+            }
+            const updatedProductResult = await productCollection.updateOne(filterProduct, updatedProduct);
+
+            res.send(result);
+        })
 
     } catch (error) {
         console.log(error)
