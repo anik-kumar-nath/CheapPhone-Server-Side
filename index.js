@@ -25,6 +25,7 @@ async function run() {
         const phoneCategory = client.db('CheapPhone').collection('PhoneCategory');
         const brandCollection = client.db('CheapPhone').collection('Brands');
         const blogCollection = client.db('CheapPhone').collection('Blogs');
+        const AdvertiseCollection = client.db('CheapPhone').collection('Advertise');
 
         app.get('/userrole', async (req, res) => {
             const email = req.query.email;
@@ -72,7 +73,16 @@ async function run() {
             const result = await productCollection.insertOne({ ...product, ...{ addingDate } });
             res.send(result);
         })
-
+        app.post('/addadvertise', async (req, res) => {
+            const report = req.body;
+            const result = await AdvertiseCollection.insertOne(report);
+            res.send(result);
+        })
+        app.get('/advertise', async (req, res) => {
+            const query = {};
+            const result = await AdvertiseCollection.find(query).toArray();
+            res.send(result);
+        })
         app.post('/bookings', async (req, res) => {
             const newBooked = req.body;
             const result = await orderCollection.insertOne(newBooked);
