@@ -23,6 +23,8 @@ async function run() {
         const orderCollection = client.db('CheapPhone').collection('order');
         const reportCollection = client.db('CheapPhone').collection('reports');
         const phoneCategory = client.db('CheapPhone').collection('PhoneCategory');
+        const brandCollection = client.db('CheapPhone').collection('Brands');
+        const blogCollection = client.db('CheapPhone').collection('Blogs');
 
         app.get('/userrole', async (req, res) => {
             const email = req.query.email;
@@ -155,6 +157,50 @@ async function run() {
             const result = await phoneCategory.findOne(query);
             res.send(result);
         })
+        app.get('/brands', async (req, res) => {
+            const query = {};
+            const result = await brandCollection.find(query).toArray();
+            res.send(result);
+        })
+        app.get('/blogs', async (req, res) => {
+            const query = {};
+            const result = await blogCollection.find(query).toArray();
+            res.send(result);
+        })
+
+        // app.post('/create-payment-intent', async (req, res) => {
+        //     const booking = req.body;
+        //     const price = booking.price;
+        //     const amount = price * 100;
+
+        //     const paymentIntent = await stripe.paymentIntents.create({
+        //         currency: 'usd',
+        //         amount: amount,
+        //         "payment_method_types": [
+        //             "card"
+        //         ]
+        //     });
+        //     res.send({
+        //         clientSecret: paymentIntent.client_secret,
+        //     });
+        // });
+        // app.post('/payments', async (req, res) =>{
+        //     const payment = req.body;
+        //     const result = await paymentsCollection.insertOne(payment);
+        //     const id = payment.bookingId
+        //     const filter = {_id: ObjectId(id)}
+        //     const updatedDoc = {
+        //         $set: {
+        //             paid: true,
+        //             transactionId: payment.transactionId
+        //         }
+        //     }
+        //     const updatedResult = await bookingsCollection.updateOne(filter, updatedDoc)
+        //     res.send(result);
+        // })
+
+
+
 
     } catch (error) {
         console.log(error)
